@@ -1,0 +1,17 @@
+[
+  {
+    "id": "PYTHON",
+    "description": "Has public evidence of production Python engineering.",
+    "required": true
+  },
+  {
+    "id": "SECURITY",
+    "description": "Has public evidence of security review or security engineering work.",
+    "required": true
+  },
+  {
+    "id": "RECENT",
+    "description": "Has relevant public work from the last two years.",
+    "required": false
+  }
+]
