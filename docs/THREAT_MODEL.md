@@ -34,7 +34,7 @@ The latest beacon can advance between the leader and validator requests. The val
 
 QualiSort does not implement threshold-signature verification for the external beacon. GenLayer consensus confirms that validators observed the same public API result. This is an explicit external trust boundary.
 
-At seal, the leader and each validator independently fetch the current beacon head; the validator permits at most a one-round difference to handle a head advancing between requests. At draw, each independently fetches the exact committed round and must agree on that round and randomness. The direct-mode mock suite cannot establish the production consensus behavior of these external requests.
+At seal, the leader and each validator independently fetch the current beacon head; the validator permits at most a one-round difference to handle a head advancing between requests. At draw, each independently fetches the exact committed round and must agree on that round and randomness. Direct-mode tests invoke the actual captured draw validator with substituted malicious leader results and swapped validator observations. They prove the predicate itself, while the finalized Studionet lifecycle remains the multi-validator integration evidence.
 
 ## Duplicate registration
 
