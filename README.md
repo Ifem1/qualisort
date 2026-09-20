@@ -205,7 +205,7 @@ Full quality gate, when optional tools are installed:
 python scripts/check_all.py
 ```
 
-The current verification records 37 passing direct-mode checks and 9 passing unit checks. `genvm-lint` AST lint passes for both contracts. SDK semantic validation and ABI schema extraction are reported separately by the quality gate if the required upstream SDK artifact is unavailable. See [`docs/TEST_PLAN.md`](docs/TEST_PLAN.md) for direct-mode coverage and [`docs/LIVE_EVIDENCE.md`](docs/LIVE_EVIDENCE.md) for deployment status.
+The green [GitHub Actions workflow](https://github.com/Ifem1/qualisort/actions/workflows/ci.yml) passed preflight, all 9 unit tests, both AST lint checks, all 37 direct-mode tests, and semantic validation plus schema extraction for both contracts. On this Windows workspace, SDK validation/schema remain locally blocked by access denied in the linter cache; the CI result verifies those checks on Ubuntu. See [`docs/TEST_PLAN.md`](docs/TEST_PLAN.md) for direct-mode coverage and [`docs/LIVE_EVIDENCE.md`](docs/LIVE_EVIDENCE.md) for deployment status.
 
 ## Deploy to Studionet
 
