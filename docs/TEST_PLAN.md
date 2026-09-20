@@ -29,6 +29,8 @@ These six tests invoke the captured `_beacon_randomness` validator using `run_va
 
 The complete Studionet 61999 lifecycle, including consumer authorization and replay behavior, is recorded in [`LIVE_EVIDENCE.md`](LIVE_EVIDENCE.md).
 
+CI seeds the direct harness cache with the published GenVM `v0.2.16` universal artifact and verifies its SHA-256 before tests. The testing suite's default `v0.3.0-rc7` lookup currently returns HTTP 404 for the universal asset it requests; using the available stable artifact keeps the direct suite deterministic without changing contract code or test assertions.
+
 ## SDK validation boundary
 
 On the current installed `genvm-linter`, semantic validation and schema extraction were attempted for both contracts. They are blocked before contract analysis because the SDK artifact cache cannot be read: `Failed to load SDK: [WinError 5] Access is denied: 'C:\\Users\\DELL\\.cache\\genvm-linter\\extracted\\genlayerlabs-genvm-manager-v0.6.0-rc5.tar\\py-genlayer\\1jb45aa8ynh2a9c9xn3b7qqh8sm5q93hwfp7jqmwsfhh8jpz09h6'`. The CLI returned exit code 1 for this cache error (an earlier attempt reported the cached SDK tar file missing). The quality gate also classifies the documented SDK-artifact exit code 3 as BLOCKED. This is reported separately from deterministic test or AST lint results; no contract workaround was made.
