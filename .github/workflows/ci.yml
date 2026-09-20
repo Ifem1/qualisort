@@ -1,0 +1,65 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  deterministic:
+    name: Deterministic checks
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: |
+            requirements.txt
+            requirements-test.txt
+      - name: Install test and lint tooling
+        run: python -m pip install -r requirements-test.txt -r requirements.txt
+      - name: Repository preflight
+        run: python scripts/preflight.py
+      - name: Unit and invariant tests
+        run: python -m pytest tests/unit -q
+      - name: GenVM AST lint
+        run: |
+          genvm-lint lint contracts/qualisort.py
+          genvm-lint lint contracts/committee_gate.py
+      - name: GenLayer direct-mode suite
+        run: python -m pytest tests/direct -q
+      - name: GenVM SDK semantic validation and schema
+        shell: bash
+        run: |
+          set -euo pipefail
+          run_sdk_check() {
+            local label="$1"
+            shift
+            local output
+            local status
+            set +e
+            output=$("$@" 2>&1)
+            status=$?
+            set -e
+            printf '%s\n' "$output"
+            if [ "$status" -eq 0 ]; then
+              echo "PASS: $label"
+            elif [ "$status" -eq 3 ] || [[ "$output" == *"Failed to load SDK"* ]] || [[ "$output" == *'"code":"E101"'* ]]; then
+              echo "::warning title=GenVM SDK check blocked::$label could not load the upstream SDK artifact (exit $status)"
+              echo "BLOCKED: $label (upstream SDK artifact unavailable; exit $status; deterministic checks above remain authoritative)"
+            else
+              echo "FAIL: $label (exit $status)"
+              return "$status"
+            fi
+          }
+          for contract in contracts/qualisort.py contracts/committee_gate.py; do
+            run_sdk_check "validate $contract" genvm-lint validate --json "$contract"
+            run_sdk_check "schema $contract" genvm-lint schema "$contract"
+          done

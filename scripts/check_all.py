@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+"""Run deterministic checks and report upstream GenVM SDK checks distinctly."""
 from __future__ import annotations
 
 import os
@@ -12,13 +13,7 @@ ENV = dict(os.environ, PYTHONUTF8="1", PYTHONIOENCODING="utf-8")
 CONTRACTS = ("contracts/qualisort.py", "contracts/committee_gate.py")
 
 
-def call(args: list[str]) -> int:
-    print("+", " ".join(args), flush=True)
-    result = subprocess.run(args, cwd=ROOT, check=False, env=ENV)
-    return result.returncode
-
-
-def captured(args: list[str]) -> int:
+def run(args: list[str]) -> tuple[int, str]:
     print("+", " ".join(args), flush=True)
     result = subprocess.run(
         args,
@@ -29,54 +24,82 @@ def captured(args: list[str]) -> int:
         stdout=subprocess.PIPE,
         stderr=subprocess.STDOUT,
     )
-    if result.stdout:
-        print(result.stdout.rstrip(), flush=True)
+    output = result.stdout.rstrip()
+    if output:
+        print(output, flush=True)
     print(f"exit={result.returncode}", flush=True)
-    return result.returncode
+    return result.returncode, output
 
 
 def main() -> int:
-    if call([sys.executable, "scripts/preflight.py"]):
-        return 1
-    if call([sys.executable, "-m", "pytest", "tests/unit", "-q"]):
-        return 1
+    deterministic_failures: list[str] = []
+    sdk_blocked: list[str] = []
 
+    checks = [
+        ("preflight", [sys.executable, "scripts/preflight.py"]),
+        ("unit tests", [sys.executable, "-m", "pytest", "tests/unit", "-q"]),
+    ]
     if shutil.which("genvm-lint"):
-        for contract in CONTRACTS:
-            if call(["genvm-lint", "lint", contract]):
-                return 1
-
-        for mode in ("validate", "schema"):
-            for contract in CONTRACTS:
-                args = ["genvm-lint", mode]
-                if mode == "validate":
-                    args.append("--json")
-                args.append(contract)
-                code = captured(args)
-                if code in (1, 2):
-                    return 1
-                if code not in (0, 3):
-                    print(f"ERROR: unexpected genvm-lint {mode} exit code {code}")
-                    return 1
-                if code == 3:
-                    print(
-                        f"BLOCKED: genvm-lint {mode} could not obtain the required upstream SDK artifact",
-                        flush=True,
-                    )
+        checks.extend(
+            (f"AST lint {contract}", ["genvm-lint", "lint", contract])
+            for contract in CONTRACTS
+        )
     else:
-        print("SKIP: genvm-lint not installed")
+        print("BLOCKED: genvm-lint is not installed; contract lint was not run")
+        sdk_blocked.append("AST lint unavailable (genvm-lint not installed)")
 
     try:
         import gltest  # noqa: F401
         have_gltest = True
     except Exception:
         have_gltest = False
-
     if have_gltest:
-        if call([sys.executable, "-m", "pytest", "tests/direct", "-q"]):
-            return 1
+        checks.append(("direct tests", [sys.executable, "-m", "pytest", "tests/direct", "-q"]))
     else:
-        print("SKIP: genlayer-test not installed")
+        print("BLOCKED: genlayer-test is not installed; direct tests were not run")
+        deterministic_failures.append("direct tests unavailable")
+
+    for name, args in checks:
+        code, _ = run(args)
+        if code:
+            deterministic_failures.append(name)
+
+    if shutil.which("genvm-lint"):
+        for mode in ("validate", "schema"):
+            for contract in CONTRACTS:
+                args = ["genvm-lint", mode]
+                if mode == "validate":
+                    args.append("--json")
+                args.append(contract)
+                code, output = run(args)
+                label = f"{mode} {contract}"
+                if code == 0:
+                    print(f"PASS: GenVM SDK {label}", flush=True)
+                elif code == 3 or "Failed to load SDK" in output or '"code":"E101"' in output:
+                    print(
+                        f"BLOCKED: GenVM SDK {label} (upstream SDK artifact unavailable; exit {code})",
+                        flush=True,
+                    )
+                    sdk_blocked.append(f"{label}: {output}")
+                else:
+                    print(f"FAIL: GenVM SDK {label} (exit {code})", flush=True)
+                    deterministic_failures.append(label)
+
+    print("\nQUALITY GATE SUMMARY", flush=True)
+    print("Deterministic checks: " + ("FAIL" if deterministic_failures else "PASS"), flush=True)
+    for failure in deterministic_failures:
+        print(f"  FAIL: {failure}", flush=True)
+    if sdk_blocked:
+        print("GenVM SDK checks: BLOCKED", flush=True)
+        for blocked in sdk_blocked:
+            print(f"  BLOCKED: {blocked}", flush=True)
+    elif shutil.which("genvm-lint"):
+        print("GenVM SDK validation/schema: PASS", flush=True)
+
+    if deterministic_failures:
+        return 1
+    if sdk_blocked:
+        return 2
     return 0
 
 

@@ -205,7 +205,7 @@ Full quality gate, when optional tools are installed:
 python scripts/check_all.py
 ```
 
-The current Windows run recorded 22 passing direct-mode checks and 5 passing unit checks. `genvm-lint` AST lint passes for both contracts. SDK semantic validation and ABI schema extraction are blocked because the installed linter's SDK cache is incomplete: the retry reported a missing SDK tarball. See [`docs/TEST_PLAN.md`](docs/TEST_PLAN.md) for direct-mode limits and [`docs/LIVE_EVIDENCE.md`](docs/LIVE_EVIDENCE.md) for deployment status.
+The current verification records 37 passing direct-mode checks and 9 passing unit checks. `genvm-lint` AST lint passes for both contracts. SDK semantic validation and ABI schema extraction are reported separately by the quality gate if the required upstream SDK artifact is unavailable. See [`docs/TEST_PLAN.md`](docs/TEST_PLAN.md) for direct-mode coverage and [`docs/LIVE_EVIDENCE.md`](docs/LIVE_EVIDENCE.md) for deployment status.
 
 ## Deploy to Studionet
 
