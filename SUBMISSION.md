@@ -19,7 +19,9 @@ The LLM cannot choose winners, set randomness, alter the rubric, or make an unqu
 
 Qualification uses a custom validator. Leader and validators independently fetch the same evidence URLs and derive total PASS/FAIL/UNRESOLVED criterion masks. Validators compare the fields that affect qualification, not free-form text.
 
-The exact target randomness-beacon round is also independently re-fetched at draw time. Committee ranking is deterministic hashing after consensus. The IC observes the public drand response through GenLayer consensus; it does not cryptographically verify the beacon threshold signature itself.
+At seal, the leader and validators independently fetch the latest drand head and must observe the exact same round. Any disagreement fails validation rather than allowing adjacent observations to select different future target rounds.
+
+At draw, the exact committed target round is independently re-fetched, and the leader and validators must agree on that exact round and its randomness before deterministic committee ranking proceeds. Committee ranking is deterministic hashing after consensus. The IC observes the public drand response through GenLayer consensus; it does not cryptographically verify the beacon threshold signature itself.
 
 ## State design
 

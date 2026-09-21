@@ -70,5 +70,5 @@ The finalized `get_committee(2)` view returned candidate 1 and applicant `0x7876
 
 The contract’s drand values above were observed from the public API independently under GenLayer consensus. QualiSort does not verify the beacon’s threshold signature on-chain. The account’s evidence qualifies the submitted address for this one pool; it does not prove the real-world identity of the account owner.
 
-Pool 1 is an unused open pool created while resolving CLI argument encoding. The recorded lifecycle and all transaction evidence above refer to pool 2. An initial CommitteeGate deployment transaction also finalized at the consensus layer but its constructor execution failed due to an address type mismatch; it did not create the corrected consumer deployment listed above.
+On the superseded `0xE63Bb511028D61A9e109A5B96E344b6b47B18C33` deployment, pool 1 was an unused open pool created while resolving CLI argument encoding. The historical lifecycle on that deployment used pool 2. An initial CommitteeGate deployment transaction also finalized at the consensus layer but its constructor execution failed due to an address type mismatch; it did not create the corrected consumer deployment listed above.
 
