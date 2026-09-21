@@ -552,12 +552,9 @@ class QualiSort(gl.Contract):
                 own, _ = fetch_beacon_once(DRAND_LATEST_URL)
             except Exception:
                 return False
-            # latest can advance between independent requests. A one-round
-            # boundary tolerance is safe because we only derive a future round.
-            delta = proposed - own
-            if delta < 0:
-                delta = -delta
-            return delta <= 1
+            # The observed head selects the committed future target round, so
+            # any disagreement is consensus-critical and must fail closed.
+            return proposed == own
 
         return int(gl.vm.run_nondet_unsafe(leader_fn, validator_fn))
 

@@ -288,6 +288,59 @@ def prepare_beacon_validator(direct_vm, direct_deploy):
     return c, pid
 
 
+def prepare_beacon_head_validator(direct_vm, direct_deploy, latest_round=100):
+    c = direct_deploy(CONTRACT)
+    pid = create_pool(c)
+    cid = c.register_candidate(pid, "Alice", json.dumps([EVIDENCE]))
+    mock_pass(direct_vm, 7)
+    c.assess_candidate(cid)
+    direct_vm.mock_web(
+        DRAND_LATEST,
+        {"status": 200, "body": json.dumps({"round": latest_round, "randomness": "a" * 64})},
+    )
+    c.seal_pool(pid)
+    return c, pid
+
+
+def test_beacon_head_validator_accepts_identical_round(direct_vm, direct_deploy):
+    prepare_beacon_head_validator(direct_vm, direct_deploy)
+    assert direct_vm.run_validator(leader_result=100) is True
+
+
+def test_beacon_head_validator_rejects_leader_behind_validator(direct_vm, direct_deploy):
+    prepare_beacon_head_validator(direct_vm, direct_deploy, latest_round=101)
+    assert direct_vm.run_validator(leader_result=100) is False
+
+
+def test_beacon_head_validator_rejects_leader_ahead_of_validator(direct_vm, direct_deploy):
+    prepare_beacon_head_validator(direct_vm, direct_deploy, latest_round=100)
+    assert direct_vm.run_validator(leader_result=101) is False
+
+
+def test_beacon_head_validator_rejects_malformed_leader(direct_vm, direct_deploy):
+    prepare_beacon_head_validator(direct_vm, direct_deploy)
+    assert direct_vm.run_validator(leader_result="100") is False
+
+
+def test_beacon_head_validator_rejects_nonpositive_leader(direct_vm, direct_deploy):
+    prepare_beacon_head_validator(direct_vm, direct_deploy)
+    assert direct_vm.run_validator(leader_result=0) is False
+
+
+def test_beacon_head_validator_rejects_unavailable_validator_observation(direct_vm, direct_deploy):
+    prepare_beacon_head_validator(direct_vm, direct_deploy)
+    direct_vm.clear_mocks()
+    direct_vm.mock_web(DRAND_LATEST, {"status": 500, "body": "unavailable"})
+    assert direct_vm.run_validator(leader_result=100) is False
+
+
+def test_adjacent_heads_cannot_commit_two_target_rounds(direct_vm, direct_deploy):
+    prepare_beacon_head_validator(direct_vm, direct_deploy, latest_round=101)
+    assert direct_vm.run_validator(leader_result=100) is False
+    # The only accepted head is 101, therefore seal can only commit 106.
+    assert direct_vm.run_validator(leader_result=101) is True
+
+
 def test_beacon_validator_rejects_correct_randomness_with_wrong_leader_round(direct_vm, direct_deploy):
     prepare_beacon_validator(direct_vm, direct_deploy)
     assert direct_vm.run_validator(

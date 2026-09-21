@@ -28,13 +28,13 @@ The owner cannot pass a random seed. Seal commits the frozen qualified set to a 
 
 ## Beacon-head race
 
-The latest beacon can advance between the leader and validator requests. The validator accepts at most a one-round difference at seal because the result is used only to choose a future round. The exact target-round randomness must later match exactly.
+The latest beacon head is consensus-critical because it determines the future beacon target. Leader and validators must independently observe exactly the same head round. If drand advances between observations, validation fails and the transaction must be retried rather than accepting two possible target rounds.
 
 ## Beacon trust
 
 QualiSort does not implement threshold-signature verification for the external beacon. GenLayer consensus confirms that validators observed the same public API result. This is an explicit external trust boundary.
 
-At seal, the leader and each validator independently fetch the current beacon head; the validator permits at most a one-round difference to handle a head advancing between requests. At draw, each independently fetches the exact committed round and must agree on that round and randomness. Direct-mode tests invoke the actual captured draw validator with substituted malicious leader results and swapped validator observations. They prove the predicate itself, while the finalized Studionet lifecycle remains the multi-validator integration evidence.
+At seal, the leader and each validator independently fetch the current beacon head and require exact round equality. At draw, each independently fetches the exact committed round and must agree on that round and randomness. Direct-mode tests invoke the actual captured head and draw validators with substituted malicious leader results and swapped validator observations. They prove the predicates themselves, while the finalized Studionet lifecycle remains the multi-validator integration evidence.
 
 ## Duplicate registration
 

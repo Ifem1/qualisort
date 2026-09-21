@@ -27,7 +27,7 @@ Contract code derives the final candidate status from masks, required criteria, 
 
 ## 5. Pool seal
 
-Only a pool owner can seal, and only when there are enough qualified candidates. Sealing observes the public randomness-beacon head under consensus and commits to a future target round. The pool digest binds the full policy and qualified candidate set.
+Only a pool owner can seal, and only when there are enough qualified candidates. Sealing observes the public randomness-beacon head under consensus and requires the leader and every validator to report the exact same head round before committing to a future target round. The pool digest binds the full policy and qualified candidate set.
 
 ## 6. Committee draw
 

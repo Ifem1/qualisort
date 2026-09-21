@@ -2,6 +2,16 @@
 
 Observed on 2026-09-19 against GenLayer Studionet, chain ID **61999**.
 
+## Corrected deployment superseding the prior address
+
+The earlier deployment below is superseded because it contained the adjacent-head consensus flaw: seal validation tolerated a one-round difference in the independently observed latest drand head. The corrected source requires exact head-round equality before committing the future target.
+
+- Corrected address: [`0xc6e4D96274137f4b0C432e9b42E0a1D80C20D872`](https://explorer-studio.genlayer.com/address/0xc6e4D96274137f4b0C432e9b42E0a1D80C20D872)
+- Deployment transaction: [`0xfc05b5353d2a10ed229183ca7ea0161df2610d22dd894b49c25d927194a0f48c`](https://explorer-studio.genlayer.com/tx/0xfc05b5353d2a10ed229183ca7ea0161df2610d22dd894b49c25d927194a0f48c)
+- Network: Studionet chain 61999; receipt status: **FINALIZED**; consensus result: `MAJORITY_AGREE`; deployment execution: `SUCCESS`.
+- The CLI source retrieval for the corrected address matches `contracts/qualisort.py` byte-for-byte after removing the CLI's `Result:` wrapper and normalizing line endings.
+- A new post-fix lifecycle was not fabricated in this run; the corrected deployment was finalized and source-matched, but pool/seal/draw transactions remain to be exercised against this new address.
+
 ## Network and explorer
 
 - RPC: `https://studio.genlayer.com/api`

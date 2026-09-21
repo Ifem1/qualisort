@@ -22,6 +22,7 @@ Covered cases include:
 - validator independently re-derives qualification rather than checking output shape;
 - a substituted malicious leader proposal is rejected by the validator predicate;
 - six tests capture and invoke the actual `_beacon_randomness` validator: wrong leader round, substituted randomness, malformed randomness, malformed result type, adjacent round, and disagreement with the validator's independent observation are each rejected;
+- seven head-consensus tests capture and invoke the actual `_beacon_head` validator: identical rounds pass; both adjacent-round directions, malformed/nonpositive leader values, unavailable validator observation, and the two-target-round ambiguity are rejected;
 - qualified withdrawal updates the pool count before seal;
 - stable status dictionary.
 
