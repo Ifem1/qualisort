@@ -34,9 +34,11 @@ or:
 genlayer deploy --contract contracts/qualisort.py --rpc https://studio.genlayer.com/api
 ```
 
-The command requires the configured CLI account to be unlocked and reachable Studionet RPC. The deployed address is [`0xE63Bb511028D61A9e109A5B96E344b6b47B18C33`](https://explorer-studio.genlayer.com/address/0xE63Bb511028D61A9e109A5B96E344b6b47B18C33), and the deployment transaction finalized successfully. See [`LIVE_EVIDENCE.md`](LIVE_EVIDENCE.md) for the transaction and lifecycle receipts.
+The command requires the configured CLI account to be unlocked and reachable Studionet RPC. The current canonical deployment is [`0xc6e4D96274137f4b0C432e9b42E0a1D80C20D872`](https://explorer-studio.genlayer.com/address/0xc6e4D96274137f4b0C432e9b42E0a1D80C20D872), with finalized deployment transaction [`0xfc05b5353d2a10ed229183ca7ea0161df2610d22dd894b49c25d927194a0f48c`](https://explorer-studio.genlayer.com/tx/0xfc05b5353d2a10ed229183ca7ea0161df2610d22dd894b49c25d927194a0f48c). The corrected source requires exact equality of the independently observed latest beacon head. See [`LIVE_EVIDENCE.md`](LIVE_EVIDENCE.md) for the finalized pool 1 lifecycle.
 
-That address is superseded by the corrected deployment [`0xc6e4D96274137f4b0C432e9b42E0a1D80C20D872`](https://explorer-studio.genlayer.com/address/0xc6e4D96274137f4b0C432e9b42E0a1D80C20D872), transaction [`0xfc05b5353d2a10ed229183ca7ea0161df2610d22dd894b49c25d927194a0f48c`](https://explorer-studio.genlayer.com/tx/0xfc05b5353d2a10ed229183ca7ea0161df2610d22dd894b49c25d927194a0f48c), finalized on chain 61999. The corrected source requires exact equality of the independently observed latest beacon head.
+### Superseded deployment
+
+The historical address [`0xE63Bb511028D61A9e109A5B96E344b6b47B18C33`](https://explorer-studio.genlayer.com/address/0xE63Bb511028D61A9e109A5B96E344b6b47B18C33) is superseded and must not be used.
 
 ## Optional consumer proof
 

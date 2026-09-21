@@ -1,6 +1,6 @@
 # Finalized Studionet evidence
 
-Observed on 2026-09-19 against GenLayer Studionet, chain ID **61999**.
+Corrected deployment and lifecycle observed on **2026-09-21** against GenLayer Studionet, chain ID **61999**. The historical superseded lifecycle is retained below with its original **2026-09-19** date.
 
 ## Corrected deployment superseding the prior address
 
@@ -10,13 +10,27 @@ The earlier deployment below is superseded because it contained the adjacent-hea
 - Deployment transaction: [`0xfc05b5353d2a10ed229183ca7ea0161df2610d22dd894b49c25d927194a0f48c`](https://explorer-studio.genlayer.com/tx/0xfc05b5353d2a10ed229183ca7ea0161df2610d22dd894b49c25d927194a0f48c)
 - Network: Studionet chain 61999; receipt status: **FINALIZED**; consensus result: `MAJORITY_AGREE`; deployment execution: `SUCCESS`.
 - The CLI source retrieval for the corrected address matches `contracts/qualisort.py` byte-for-byte after removing the CLI's `Result:` wrapper and normalizing line endings.
-- A new post-fix lifecycle was not fabricated in this run; the corrected deployment was finalized and source-matched, but pool/seal/draw transactions remain to be exercised against this new address.
+- A complete post-fix lifecycle was finalized below.
+
+## Corrected live lifecycle: pool 1 (2026-09-21)
+
+| Step | Transaction | Finalized result |
+|---|---|---|
+| Create pool 1 | [`0x63cf951b4c245a67e5cc5042e8429c1331085cc8510459d4e450cbc747d90ece`](https://explorer-studio.genlayer.com/tx/0x63cf951b4c245a67e5cc5042e8429c1331085cc8510459d4e450cbc747d90ece) | `OPEN`, pool ID 1 |
+| Register candidate 1 | [`0x116827ee08a127d413ec243ac246278ac4d227bdd864ae73320fefb1488f5e95`](https://explorer-studio.genlayer.com/tx/0x116827ee08a127d413ec243ac246278ac4d227bdd864ae73320fefb1488f5e95) | `https://github.com/torvalds/linux` |
+| Assess candidate 1 | [`0xd5e5e5f3ab850774b770a33a60c6dc9bcf3e55726a6bfeb378aeae734bd5bfb2`](https://explorer-studio.genlayer.com/tx/0xd5e5e5f3ab850774b770a33a60c6dc9bcf3e55726a6bfeb378aeae734bd5bfb2) | `QUALIFIED`, pass mask 1 |
+| Seal pool 1 | [`0x37e9f3adad93d9c6db72b97e083fd01e053e0e593f386774a3e0104f2ee0c826`](https://explorer-studio.genlayer.com/tx/0x37e9f3adad93d9c6db72b97e083fd01e053e0e593f386774a3e0104f2ee0c826) | `SEALED`; target round 6,486,213; pool digest `caad04e5874e381314b1f40f6fea251301ed066b9cef7628da4cabc351a85884` |
+| Draw committee | [`0x6eb1371c7eb23989edd28786c3d6545ef3411da09f98a340347a457942807287`](https://explorer-studio.genlayer.com/tx/0x6eb1371c7eb23989f98a340347a457942807287) | `DRAWN`; selected candidate ID 1 |
+
+The finalized pool stores beacon randomness `be3f52dcdfd30e5f92d282425a4b081fe28574df4dea1450e007c54d3bade08f`, selection seed `ecd5a53a709fc3188993af668c53d29601c99e6ece508b51977f008be6368d4f`, and committee `[{candidate_id: 1, applicant: 0x77e2EdBb43277bf772e207C517dde731935ffbA5, pass_mask: 1}]`.
 
 ## Network and explorer
 
 - RPC: `https://studio.genlayer.com/api`
 - Explorer: [GenLayer Studio Explorer](https://explorer-studio.genlayer.com/)
 - Transaction links below use the explorer's verified `/tx/<hash>` route.
+
+## Historical superseded deployment (2026-09-19)
 
 ## QualiSort deployment
 
@@ -57,3 +71,4 @@ The finalized `get_committee(2)` view returned candidate 1 and applicant `0x7876
 The contract’s drand values above were observed from the public API independently under GenLayer consensus. QualiSort does not verify the beacon’s threshold signature on-chain. The account’s evidence qualifies the submitted address for this one pool; it does not prove the real-world identity of the account owner.
 
 Pool 1 is an unused open pool created while resolving CLI argument encoding. The recorded lifecycle and all transaction evidence above refer to pool 2. An initial CommitteeGate deployment transaction also finalized at the consensus layer but its constructor execution failed due to an address type mismatch; it did not create the corrected consumer deployment listed above.
+

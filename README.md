@@ -225,9 +225,9 @@ The finalized Studionet deployment and end-to-end lifecycle are recorded in [`do
 
 ## Finalized Studionet lifecycle
 
-QualiSort is deployed at [`0xE63Bb511028D61A9e109A5B96E344b6b47B18C33`](https://explorer-studio.genlayer.com/address/0xE63Bb511028D61A9e109A5B96E344b6b47B18C33). Its deployment, pool 2 lifecycle, beacon data, and a second-IC `CommitteeGate` proof are recorded in [`docs/LIVE_EVIDENCE.md`](docs/LIVE_EVIDENCE.md). The demo shows one `QUALIFIED` candidate, one `AMBIGUOUS` candidate, a finalized seal and draw, and deterministic stored membership.
+QualiSort’s current canonical deployment is [`0xc6e4D96274137f4b0C432e9b42E0a1D80C20D872`](https://explorer-studio.genlayer.com/address/0xc6e4D96274137f4b0C432e9b42E0a1D80C20D872), finalized in transaction [`0xfc05b5353d2a10ed229183ca7ea0161df2610d22dd894b49c25d927194a0f48c`](https://explorer-studio.genlayer.com/tx/0xfc05b5353d2a10ed229183ca7ea0161df2610d22dd894b49c25d927194a0f48c). Pool 1 completed qualification, sealing at target round 6,486,213, and deterministic committee draw; all receipts and stored randomness are in [`docs/LIVE_EVIDENCE.md`](docs/LIVE_EVIDENCE.md). The corrected deployment requires exact latest-beacon head equality at seal.
 
-That prior address is superseded by the corrected deployment [`0xc6e4D96274137f4b0C432e9b42E0a1D80C20D872`](https://explorer-studio.genlayer.com/address/0xc6e4D96274137f4b0C432e9b42E0a1D80C20D872), finalized in transaction [`0xfc05b5353d2a10ed229183ca7ea0161df2610d22dd894b49c25d927194a0f48c`](https://explorer-studio.genlayer.com/tx/0xfc05b5353d2a10ed229183ca7ea0161df2610d22dd894b49c25d927194a0f48c). The corrected deployment requires exact latest-beacon head equality at seal; see the evidence document for the source-match and lifecycle boundary.
+The earlier `0xE63Bb511028D61A9e109A5B96E344b6b47B18C33` deployment is superseded and retained only as historical evidence.
 
 The `CommitteeGate` deployment at [`0xA558965ba50ce10E1542BaE8867f47D0B08f373a`](https://explorer-studio.genlayer.com/address/0xA558965ba50ce10E1542BaE8867f47D0B08f373a) accepted the selected member, rejected a non-member, and rejected reuse of an action ID. The contract relies on validator consensus over the public drand response; it does not verify drand threshold signatures itself.
 
